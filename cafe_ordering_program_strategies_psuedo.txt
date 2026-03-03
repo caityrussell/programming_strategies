@@ -1,0 +1,155 @@
+Constants
+SET COFFEE_PRICE = 3.00
+SET TEA_PRICE = 2.50
+SET HOTCHOC_PRICE = 3.75
+
+SET SUGAR_PRICE = 0.10
+SET CREAM_PRICE = 0.50
+SET SYRUP_PRICE = 0.75
+
+SET DISCOUNT_THRESHOLD = 5.00
+SET DISCOUNT_RATE = 0.10
+SET TAX_RATE = 0.05
+
+Program Start 
+DISPLAY welcome banner
+
+SET total_drinks = 0
+SET final_subtotal = 0
+
+Main Order Loop
+SET order_number = 1
+
+REPEAT
+
+    DISPLAY "Order #", order_number
+    DISPLAY beverage menu
+
+    INPUT beverage_choice
+
+    WHILE beverage_choice NOT between 1 and 3
+        DISPLAY error message
+        INPUT beverage_choice
+    END WHILE
+
+    IF beverage_choice == 1
+        beverage_name = "Coffee"
+        beverage_price = COFFEE_PRICE
+    ELSE IF beverage_choice == 2
+        beverage_name = "Tea"
+        beverage_price = TEA_PRICE
+    ELSE
+        beverage_name = "Hot Chocolate"
+        beverage_price = HOTCHOC_PRICE
+    END IF
+
+    DISPLAY "You chose", beverage_name
+
+SET sugar_added = "no"
+SET cream_added = "no"
+SET syrup_added = "no"
+
+SET extras_total = 0
+
+REPEAT
+
+    DISPLAY extras menu
+    SHOW checkmarks beside extras already chosen
+
+    INPUT extra_choice
+
+    WHILE extra_choice NOT between 0 and 3
+        DISPLAY error message
+        INPUT extra_choice
+    END WHILE
+
+    IF extra_choice == 1
+        IF sugar_added == "yes"
+            DISPLAY "Sugar is already added."
+        ELSE
+            sugar_added = "yes"
+            extras_total = extras_total + SUGAR_PRICE
+            DISPLAY "Sugar added (+$0.10)."
+        END IF
+
+    ELSE IF extra_choice == 2
+        IF cream_added == "yes"
+            DISPLAY "Cream is already added."
+        ELSE
+            cream_added = "yes"
+            extras_total = extras_total + CREAM_PRICE
+            DISPLAY "Cream added (+$0.50)."
+        END IF
+
+    ELSE IF extra_choice == 3
+        IF syrup_added == "yes"
+            DISPLAY "Syrup is already added."
+        ELSE
+            syrup_added = "yes"
+            extras_total = extras_total + SYRUP_PRICE
+            DISPLAY "Syrup added (+$0.75)."
+        END IF
+    END IF
+
+UNTIL extra_choice == 0
+
+
+Order Summary Calucations
+SET subtotal = beverage_price + extras_total
+
+IF subtotal > DISCOUNT_THRESHOLD
+    discount_amount = subtotal * DISCOUNT_RATE
+ELSE
+    discount_amount = 0
+END IF
+
+SET after_discount = subtotal - discount_amount
+
+
+Display Order Summary
+DISPLAY beverage name and price
+
+IF any extras added
+    DISPLAY each extra with price
+END IF
+
+DISPLAY subtotal
+IF discount applied
+    DISPLAY discount amount
+    DISPLAY after_discount
+END IF
+
+
+Update Totals for Final Receipt 
+total_drinks = total_drinks + 1
+final_subtotal = final_subtotal + after_discount
+
+
+
+Ask for another order
+DISPLAY "Would you like to order another drink? (Y/N)"
+
+INPUT again
+
+IF again is empty
+    again = "N"
+END IF
+
+order_number = order_number + 1
+
+UNTIL again is "N" or "n"
+
+
+Final Receipt
+DISPLAY receipt banner
+
+DISPLAY total_drinks
+DISPLAY final_subtotal
+
+SET tax_amount = final_subtotal * TAX_RATE
+SET grand_total = final_subtotal + tax_amount
+
+DISPLAY tax_amount
+DISPLAY grand_total
+
+DISPLAY thank you message
